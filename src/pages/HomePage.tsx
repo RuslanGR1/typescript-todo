@@ -6,10 +6,12 @@ import TaskList from "../shared/ui/TaskList";
 
 const HomePage = () => {
   return (
-    <div className="p-5 flex flex-col">
+    <div className="container mt-5 mx-auto flex flex-col">
       {/* <TaskSearch />
       <TaskFilter /> */}
-      <TaskList />
+      <div className="flex">
+        <TaskList />
+      </div>
     </div>
   );
 };
