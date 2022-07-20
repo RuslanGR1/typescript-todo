@@ -1,18 +1,54 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
-import { ITask } from 'entities/task'
+import type { ITask, IColumn } from 'entities/task'
 
-export const taskApi = createApi({
+export const projectApi = createApi({
   reducerPath: 'taskApi',
-  baseQuery: fetchBaseQuery({ baseUrl: 'https://jsonplaceholder.typicode.com/' }),
+  baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:5000/' }),
+  tagTypes: ["Columns", "Task"],
   endpoints: (builder) => ({
     getAllTasks: builder.query({
-      query: () => `todos`,
+      query: () => `tasks`,
+      providesTags: ["Task"]
     }),
     getTask: builder.query<ITask, string | undefined>({
-      query: (taskId) => `todos/${taskId}`,
+      query: (taskId) => `tasks/${taskId}`,
     }),
+    addTask: builder.mutation<any, any>({
+      query: (task: ITask) => ({
+        url: 'tasks',
+        method: 'post',
+        body: task
+      }),
+      invalidatesTags: ["Task"]
+    }),
+    getTasksByColumn: builder.query({
+      query: (columnId) => `tasks?columnId=${columnId}`,
+      providesTags: ["Task"]
+    }),
+    getAllColumns: builder.query({
+      query: () => ({ url: `columns` }),
+      providesTags: ["Columns"],
+    }),
+
+    addColumn: builder.mutation<any, any>({
+      query: (column: IColumn) => ({
+        url: 'columns',
+        method: 'post',
+        body: column
+      }),
+      invalidatesTags: ["Columns"]
+    })
   }),
 })
 
-export const { useGetAllTasksQuery, useGetTaskQuery } = taskApi
+export const {
+  useGetAllTasksQuery,
+  useGetTaskQuery,
+  useAddTaskMutation,
+  useGetAllColumnsQuery,
+  useGetTasksByColumnQuery,
+  useLazyGetTasksByColumnQuery,
+  useAddColumnMutation,
+  useLazyGetAllColumnsQuery,
+} = projectApi
