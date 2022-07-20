@@ -15,9 +15,3 @@ export interface IColumn {
   title: string;
   description: string;
 }
-
-export interface IBoard {
-  id: string;
-  title: string;
-  description: string;
-}

@@ -16,6 +16,9 @@ const TaskDetail: FC<TaskDetailProps> = () => {
           value={task?.title}
         />
       </div>
+      <div className="p-4 mt-5 bg-gray-300 text-white w-[300px] h-[200px] hover:bg-gray-200 point hover:text-gray-500 hover:ml-5 transition-all ">
+        board 1
+      </div>
     </div>
   );
 };

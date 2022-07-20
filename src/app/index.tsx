@@ -1,6 +1,7 @@
 import Navigation from "shared/ui/Navigation";
 import { withProviders } from "./providers";
-import { Routing } from "pages";
+import { Routing } from "routes/mainRoute";
+import { IframeRoute } from "routes/iframeRoute"
 import { Provider } from "react-redux";
 import { setupStore } from "store";
 
@@ -11,6 +12,7 @@ function App() {
     <Provider store={store}>
       <Navigation />
       <Routing />
+      <IframeRoute/>
     </Provider>
   );
 }

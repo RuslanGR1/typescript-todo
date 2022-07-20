@@ -1,7 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 
-import HomePage from "./HomePage";
-import TaskDetail from "./TaskDetail";
+import HomePage from "../pages/HomePage";
+import TaskDetail from "../pages/TaskDetail";
 
 export const Routing = () => {
   return (
