@@ -1,5 +1,7 @@
+import type { Moment } from 'moment'
+
 export interface IBoard {
   id: string;
-  title: string;
-  description: string;
+  created: Moment;
+  updated: Moment;
 }

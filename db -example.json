@@ -1,5 +1,11 @@
 {
   "tasks": [],
   "columns": [],
-  "boards": []
+  "boards": [
+    {
+      "id": "80ce573e-c99c-4047-a5bd-af562ced478d",
+      "created": "2022-07-21T17:01:00.281Z",
+      "updated": "2022-07-21T17:01:00.281Z"
+    }
+  ]
 }

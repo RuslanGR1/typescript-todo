@@ -1,9 +1,10 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import { FC, useState } from "react";
+import moment from "moment";
 import {
   useAddTaskMutation,
   useGetTasksByColumnQuery,
-  useLazyGetTasksByColumnQuery,
+  useRemoveTaskMutation,
 } from "store/api";
 import { ITask } from "entities/task";
 import cn from "classnames";
@@ -13,14 +14,19 @@ import { v4 as uuid } from "uuid";
 interface TaskListProps {
   title?: string;
   columnId: string;
+  boardId: string;
 }
 
-const TaskList: FC<TaskListProps> = ({ title, columnId }) => {
+const TaskList: FC<TaskListProps> = ({ title, columnId, boardId }) => {
   const { data: tasks } = useGetTasksByColumnQuery(columnId);
-  const [addTask, result] = useAddTaskMutation();
+  const [removeTask] = useRemoveTaskMutation();
+  const [addTask] = useAddTaskMutation();
   const [newTask, setNewTask] = useState("");
-  const [getTasksLazy, temp1, temp2] = useLazyGetTasksByColumnQuery();
-  console.log("tempdf", temp1, temp2);
+
+  const handleTaskClick = (e: React.MouseEvent<HTMLElement>) => {
+    e.preventDefault();
+    e.nativeEvent.stopImmediatePropagation();
+  };
 
   const addTaskClick = () => {
     if (!newTask) return;
@@ -32,32 +38,42 @@ const TaskList: FC<TaskListProps> = ({ title, columnId }) => {
       title: newTask,
       description: "",
       columnId: columnId,
-      boardId: 1,
-      created: 34335323,
-      updated: 343432432,
+      boardId: boardId,
+      created: moment(),
+      updated: moment(),
     };
-    console.log(result);
+
     setNewTask("");
-    //console.log([addTask, result]);
     addTask(_task);
-    //getTasksLazy(columnId);
   };
+
+  const onTaskDelete = (taskId: string) => {
+    removeTask(taskId);
+  };
+
+  const onTaskOpen = (taskId: string) => {};
 
   return (
     <div
       className={cn(
-        "h-fit w-[300px] bg-gray-100 overflow-y-auto flex flex-col p-2 rounded shadow mx-2"
+        " min-w-[250px] h-fit w-[300px] bg-gray-100 overflow-y-auto flex flex-col p-2 rounded shadow mx-2"
       )}
     >
       <div className="font-bold text-lg mb-2">{title}</div>
       <div className="overflow-y-auto">
         {tasks?.map((task: ITask) => (
-          <TaskItem key={task.id} {...task} />
+          <TaskItem
+            key={task.id}
+            {...task}
+            onTaskDelete={onTaskDelete}
+            onTaskOpen={onTaskOpen}
+            onTaskClick={handleTaskClick}
+          />
         ))}
       </div>
       <button
         onClick={() => addTaskClick()}
-        className="mt-2 bg-gray-500 text-white py-2 rounded shadow hover:text-gray-500 hover:bg-white hover:border-gray-500 hover:shadow-lg trasition-all"
+        className="mt-2 cursor-pointer bg-gray-500 text-white py-2 rounded shadow hover:text-gray-500 hover:bg-white hover:border-gray-500 hover:shadow-lg trasition-all"
       >
         + Добавить карточку
       </button>

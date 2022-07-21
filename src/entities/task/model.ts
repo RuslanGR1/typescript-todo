@@ -1,3 +1,5 @@
+import type { Moment } from 'moment'
+
 export interface ITask {
   userId: number | null;
   id: string;
@@ -5,13 +7,15 @@ export interface ITask {
   completed: boolean;
   description: string;
   columnId: string;
-  boardId: number | null;
-  created: number;
-  updated: number;
+  boardId: string;
+  created: Moment;
+  updated: Moment;
 }
 
 export interface IColumn {
   id: string;
   title: string;
   description: string;
+  boardId: string;
 }
+
