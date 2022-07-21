@@ -60,7 +60,7 @@ export const projectApi = createApi({
         method: 'post',
         body: column
       }),
-      invalidatesTags: ["Columns"]
+      invalidatesTags: ["Boards"]
     })
   }),
 })
