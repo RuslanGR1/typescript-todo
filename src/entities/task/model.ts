@@ -18,4 +18,3 @@ export interface IColumn {
   description: string;
   boardId: string;
 }
-

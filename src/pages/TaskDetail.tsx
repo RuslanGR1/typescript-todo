@@ -7,6 +7,8 @@ interface TaskDetailProps {}
 const TaskDetail: FC<TaskDetailProps> = () => {
   const { taskId } = useParams();
   const { data: task } = useGetTaskQuery(taskId);
+  console.log("Task opened", taskId);
+
   return (
     <div className="container mt-5 mx-auto">
       <div className="bg-gray-200 p-5 rounded shadow w-[400px] h-[600px]">
@@ -15,9 +17,6 @@ const TaskDetail: FC<TaskDetailProps> = () => {
           className="border p-2 min-h-[150px] min-w-[300px]"
           value={task?.title}
         />
-      </div>
-      <div className="p-4 mt-5 bg-gray-300 text-white w-[300px] h-[200px] hover:bg-gray-200 point hover:text-gray-500 hover:ml-5 transition-all ">
-        board 1
       </div>
     </div>
   );

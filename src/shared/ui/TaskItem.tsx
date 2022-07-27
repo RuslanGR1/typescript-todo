@@ -1,6 +1,7 @@
 import { FC, useState } from "react";
 import { Link } from "react-router-dom";
 import cn from "classnames";
+import { useDrag } from "react-dnd";
 
 import { ITask } from "entities/task";
 interface TaskItemProp extends ITask {
@@ -17,6 +18,15 @@ const TaskItem: FC<TaskItemProp> = ({
   onTaskOpen,
 }) => {
   const [visible, setVisible] = useState(true);
+  const [{ isDragging }, drag, dragPreview] = useDrag(() => ({
+    // "type" is required. It is used by the "accept" specification of drop targets.
+    type: "BOX",
+    // The collect function utilizes a "monitor" instance (see the Overview for what this is)
+    // to pull important pieces of state from the DnD system.
+    collect: (monitor) => ({
+      isDragging: monitor.isDragging(),
+    }),
+  }));
 
   const onContextChange = (e: React.MouseEvent<HTMLElement>) => {
     setVisible((prev) => !prev);
@@ -25,11 +35,13 @@ const TaskItem: FC<TaskItemProp> = ({
 
   return (
     <div
+      ref={drag}
+      style={{ backgroundColor: isDragging ? "black" : "white" }}
       onMouseLeave={() => setVisible(true)}
       onContextMenu={onContextChange}
       className="relative rounded bg-gray-200 my-2 p-2 shadow text-gray-600 hover:bg-gray-300 hover:text-white transition-all"
     >
-      <Link className="" to={`task/${id}`}>
+      <Link ref={dragPreview} className="" to={`task/${id}`}>
         {title}
       </Link>
       <div
