@@ -32,6 +32,9 @@ const TaskList: FC<TaskListProps> = ({ title, columnId, boardId }) => {
       isOver: monitor.isOver(),
       canDrop: monitor.canDrop(),
     }),
+    drop: () => ({
+      columnId
+    })
   }));
 
   const handleTaskClick = (e: React.MouseEvent<HTMLElement>) => {

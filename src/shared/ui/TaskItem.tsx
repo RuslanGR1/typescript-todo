@@ -2,6 +2,7 @@ import { FC, useState } from "react";
 import { Link } from "react-router-dom";
 import cn from "classnames";
 import { useDrag } from "react-dnd";
+import { useDragTaskMutation } from "store/api";
 
 import { ITask } from "entities/task";
 interface TaskItemProp extends ITask {
@@ -17,6 +18,7 @@ const TaskItem: FC<TaskItemProp> = ({
   onTaskDelete,
   onTaskOpen,
 }) => {
+  const [onDrag] = useDragTaskMutation()
   const [visible, setVisible] = useState(true);
   const [{ isDragging }, drag, dragPreview] = useDrag(() => ({
     // "type" is required. It is used by the "accept" specification of drop targets.
@@ -26,6 +28,11 @@ const TaskItem: FC<TaskItemProp> = ({
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),
     }),
+    end(item: any, monitor) {
+      const { columnId: targetColumnId }: any = monitor.getDropResult();
+      
+      onDrag({targetColumnId, taskId: id})
+    }
   }));
 
   const onContextChange = (e: React.MouseEvent<HTMLElement>) => {
