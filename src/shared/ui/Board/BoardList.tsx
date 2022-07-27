@@ -1,5 +1,5 @@
 import { IBoard } from "entities/board";
-import { BoardItem } from "shared/ui/BoardItem";
+import { BoardItem } from "./BoardItem";
 import { FC } from "react";
 
 
@@ -18,4 +18,4 @@ const BoardList: FC<Props> = (props) => {
   );
 }
 
-export default BoardList;
+export { BoardList };

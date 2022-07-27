@@ -1,7 +1,7 @@
 import {
   useGetAllBoardsQuery
 } from "store/api";
-import { BoardItem } from "shared/ui/BoardItem";
+import { BoardItem } from "shared/ui/Board";
 import type { IBoard } from "entities";
 // import { v4 as uuid } from "uuid";
 

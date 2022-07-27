@@ -12,7 +12,7 @@ import {
   useRemoveTaskMutation,
 } from "store/api";
 import { ITask } from "entities/task";
-import TaskItem from "./TaskItem";
+import { TaskItem } from "./TaskItem";
 
 interface TaskListProps {
   title?: string;
@@ -105,4 +105,4 @@ const TaskList: FC<TaskListProps> = ({ title, columnId, boardId }) => {
   );
 };
 
-export default TaskList;
+export { TaskList };

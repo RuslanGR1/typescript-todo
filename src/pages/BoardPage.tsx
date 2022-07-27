@@ -1,7 +1,7 @@
 import { FC, useState } from "react";
 
 import { useParams } from "react-router-dom";
-import TaskList from "../shared/ui/TaskList";
+import { TaskList } from "../shared/ui/Task";
 import {
   useAddColumnMutation,
   useGetColumnsByBoardQuery,
@@ -10,7 +10,7 @@ import type { IColumn } from "entities";
 import cn from "classnames";
 import { v4 as uuid } from "uuid";
 
-interface Props {}
+interface Props { }
 
 const BoardPage: FC<Props> = () => {
   const { boardId } = useParams();

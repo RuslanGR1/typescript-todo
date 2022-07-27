@@ -2,9 +2,11 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
 import type { ITask, IColumn } from 'entities/task'
 
+const baseUrl: string = 'http://localhost:5000/'
+
 export const projectApi = createApi({
   reducerPath: 'taskApi',
-  baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:5000/' }),
+  baseQuery: fetchBaseQuery({ baseUrl }),
   tagTypes: ["Columns", "Task", "Boards", "Drag"],
   endpoints: (builder) => ({
 
@@ -66,23 +68,14 @@ export const projectApi = createApi({
       invalidatesTags: ["Boards"]
     }),
 
-    dragTask: builder.mutation<any, any>({
+    dragTask: builder.mutation<ITask, any>({
       query: ({ targetColumnId, task }: { targetColumnId: string; task: ITask }) => ({
         url: `tasks/${task.id}`,
         method: 'put',
-        body: {
-          id: task.id,
-          userId: task.userId,
-          completed: task.completed,
-          title: task.title,
-          description: task.description,
-          boardId: task.boardId,
-          created: task.created,
-          updated: task.updated,
-          columnId: targetColumnId
-        }
+        body: { ...task, columnId: targetColumnId }
       }),
-      invalidatesTags: (result: any, error: any, body: any): any[] => [{ type: 'Task', id: result.id }, { type: 'Task', id: body.id }]
+      invalidatesTags: (result: any, error: any, body: any): any[] =>
+        [{ type: 'Task', id: result.id }, { type: 'Task', id: body.id }]
     })
   }),
 })

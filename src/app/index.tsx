@@ -1,6 +1,6 @@
 import { Fragment } from "react";
 
-import Navigation from "shared/ui/Navigation";
+import Navigation from "widgets/Navigation";
 import { withProviders } from "./providers";
 import { Routing } from "routes/mainRoute";
 

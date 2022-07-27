@@ -2,9 +2,10 @@ import { FC, useState } from "react";
 import { Link } from "react-router-dom";
 import cn from "classnames";
 import { useDrag } from "react-dnd";
-import { useDragTaskMutation } from "store/api";
 
+import { useDragTaskMutation } from "store/api";
 import { ITask } from "entities/task";
+
 interface TaskItemProp {
   onTaskClick?: (e: React.MouseEvent<HTMLElement>) => void;
   onTaskOpen: (taskId: string) => void;
@@ -79,4 +80,4 @@ const TaskItem: FC<TaskItemProp> = ({
   );
 };
 
-export default TaskItem;
+export { TaskItem };
