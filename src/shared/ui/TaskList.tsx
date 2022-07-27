@@ -81,7 +81,7 @@ const TaskList: FC<TaskListProps> = ({ title, columnId, boardId }) => {
         {tasks?.map((task: ITask) => (
           <TaskItem
             key={task.id}
-            {...task}
+            task={task}
             onTaskDelete={onTaskDelete}
             onTaskOpen={onTaskOpen}
             onTaskClick={handleTaskClick}

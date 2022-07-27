@@ -5,15 +5,15 @@ import { useDrag } from "react-dnd";
 import { useDragTaskMutation } from "store/api";
 
 import { ITask } from "entities/task";
-interface TaskItemProp extends ITask {
+interface TaskItemProp {
   onTaskClick?: (e: React.MouseEvent<HTMLElement>) => void;
   onTaskOpen: (taskId: string) => void;
   onTaskDelete: (taskId: string) => void;
+  task: ITask;
 }
 
 const TaskItem: FC<TaskItemProp> = ({
-  title,
-  id,
+  task,
   onTaskClick,
   onTaskDelete,
   onTaskOpen,
@@ -30,8 +30,8 @@ const TaskItem: FC<TaskItemProp> = ({
     }),
     end(item: any, monitor) {
       const { columnId: targetColumnId }: any = monitor.getDropResult();
-      
-      onDrag({targetColumnId, taskId: id})
+
+      onDrag({ targetColumnId, task })
     }
   }));
 
@@ -48,8 +48,8 @@ const TaskItem: FC<TaskItemProp> = ({
       onContextMenu={onContextChange}
       className="relative rounded bg-gray-200 my-2 p-2 shadow text-gray-600 hover:bg-gray-300 hover:text-white transition-all"
     >
-      <Link ref={dragPreview} className="" to={`task/${id}`}>
-        {title}
+      <Link ref={dragPreview} className="" to={`task/${task.id}`}>
+        {task.title}
       </Link>
       <div
         style={{ zIndex: "9" }}
@@ -62,13 +62,13 @@ const TaskItem: FC<TaskItemProp> = ({
       >
         <div onMouseLeave={() => setVisible(true)} className="flex flex-col">
           <div
-            onClick={() => onTaskDelete(id)}
+            onClick={() => onTaskDelete(task.id)}
             className="bg-gray-100 rounded cursor-pointer text-gray-700 hover:bg-gray-200 py-1 px-5 mb-1"
           >
             Удалить
           </div>
           <div
-            onClick={() => onTaskOpen(id)}
+            onClick={() => onTaskOpen(task.id)}
             className="bg-gray-100 rounded cursor-pointer text-gray-700 hover:bg-gray-200 py-1 px-5 mb-1"
           >
             Открыть

@@ -67,10 +67,18 @@ export const projectApi = createApi({
     }),
 
     dragTask: builder.mutation<any, any>({
-      query: ({targetColumnId, taskId}: { targetColumnId: string; taskId: string }) => ({
-        url: `tasks/${taskId}`,
-        method: 'patch',
+      query: ({ targetColumnId, task }: { targetColumnId: string; task: ITask }) => ({
+        url: `tasks/${task.id}`,
+        method: 'put',
         body: {
+          id: task.id,
+          userId: task.userId,
+          completed: task.completed,
+          title: task.title,
+          description: task.description,
+          boardId: task.boardId,
+          created: task.created,
+          updated: task.updated,
           columnId: targetColumnId
         }
       }),

@@ -1,21 +1,21 @@
 import React, { FC, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+
 import { useGetTaskQuery } from "store/api";
 
-interface TaskDetailProps {}
+interface TaskDetailProps { }
 
 const TaskDetail: FC<TaskDetailProps> = () => {
   const { taskId, boardId } = useParams();
   const [visible, setVisible] = useState<boolean>(true);
   const { data: task } = useGetTaskQuery(taskId);
-  console.log("Task opened", taskId);
   const navigate = useNavigate();
 
   useEffect(() => {
     if (!visible) {
       navigate(`/board/${boardId}`);
     }
-  }, [visible]);
+  }, [boardId, navigate, visible]);
 
   const onModalClick = (e: React.MouseEvent<HTMLElement>) => {
     e.stopPropagation();
