@@ -1,5 +1,6 @@
 import React, { FC, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { Button } from "shared/ui/Button";
 
 import { useGetTaskQuery } from "store/api";
 
@@ -29,13 +30,18 @@ const TaskDetail: FC<TaskDetailProps> = () => {
     >
       <div
         onClick={onModalClick}
-        className="bg-gray-200 p-5 rounded shadow w-[400px] h-[600px]"
+        className="bg-gray-200 p-5 rounded shadow w-[400px] h-[400px]"
       >
-        <div className="mb-4">Task#{taskId}</div>
-        <textarea
-          className="border p-2 min-h-[150px] min-w-[300px] outline-none bg-gray-100"
+        <div className="mb-4">{taskId}</div>
+        <input
+          className="border p-2 min-w-[300px] outline-none bg-gray-100 mb-2"
           value={task?.title}
         />
+        <textarea
+          className="border p-2 min-h-[150px] min-w-[300px] outline-none bg-gray-100"
+          value={task?.description}
+        />
+        <Button title="Сохранить" />
       </div>
     </div>
   );

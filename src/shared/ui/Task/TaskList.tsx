@@ -13,6 +13,8 @@ import {
 } from "store/api";
 import { ITask } from "entities/task";
 import { TaskItem } from "./TaskItem";
+import { Dots } from "shared/icons/Dots";
+import { Refresh } from "shared/icons/Refresh";
 
 interface TaskListProps {
   title?: string;
@@ -21,9 +23,10 @@ interface TaskListProps {
 }
 
 const TaskList: FC<TaskListProps> = ({ title, columnId, boardId }) => {
-  const { data: tasks } = useGetTasksByColumnQuery(columnId);
+  const { data: tasks, isFetching } = useGetTasksByColumnQuery(columnId);
   const [removeTask] = useRemoveTaskMutation();
   const [addTask] = useAddTaskMutation();
+  const [isInputOpen, setIsInputOpen] = useState<boolean>(false)
   const [newTask, setNewTask] = useState("");
   const navigate = useNavigate();
   const [{ canDrop, isOver }, drop] = useDrop(() => ({
@@ -43,6 +46,11 @@ const TaskList: FC<TaskListProps> = ({ title, columnId, boardId }) => {
   };
 
   const addTaskClick = () => {
+    if (!isInputOpen) {
+      setIsInputOpen(true)
+      return
+    }
+
     if (!newTask) return;
 
     const _task: ITask = {
@@ -59,6 +67,7 @@ const TaskList: FC<TaskListProps> = ({ title, columnId, boardId }) => {
 
     setNewTask("");
     addTask(_task);
+    setIsInputOpen(false)
   };
 
   const onTaskDelete = (taskId: string) => {
@@ -76,7 +85,18 @@ const TaskList: FC<TaskListProps> = ({ title, columnId, boardId }) => {
         " min-w-[250px] h-fit w-[300px] bg-gray-100 overflow-y-auto flex flex-col p-2 rounded shadow mx-2"
       )}
     >
-      <div className="font-bold text-lg mb-2">{title}</div>
+      <div className="font-bold text-lg mb-2 flex items-center justify-between">
+        {title}
+        <div className="flex items-center">
+          <div className={"cursor-pointer mr-2"}>
+            {isFetching && <Refresh />}
+          </div>
+          <div className={"cursor-pointer"}>
+            <Dots />
+          </div>
+        </div>
+
+      </div>
       <div className="overflow-y-auto">
         {tasks?.map((task: ITask) => (
           <TaskItem
@@ -99,7 +119,7 @@ const TaskList: FC<TaskListProps> = ({ title, columnId, boardId }) => {
         type="text"
         value={newTask}
         onChange={(e) => setNewTask(e.target.value)}
-        className="p-2 mt-2 outline-none"
+        className={cn("p-2 mt-2 outline-none block", { "hidden": !isInputOpen })}
       />
     </div>
   );

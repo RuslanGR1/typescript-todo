@@ -10,10 +10,10 @@ interface Props {
 const BoardList: FC<Props> = (props) => {
   const { boards } = props;
   return (
-    <ul>
-      {
-        boards.map((board) => <BoardItem key={board.id} board={board} />)
-      }
+    <ul className={"flex items-center"}>
+      {boards?.map((board: IBoard) => (
+        <BoardItem key={board.id} board={board} />
+      ))}
     </ul>
   );
 }
