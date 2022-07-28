@@ -23,7 +23,7 @@ interface TaskListProps {
 }
 
 const TaskList: FC<TaskListProps> = ({ title, columnId, boardId }) => {
-  const { data: tasks, isFetching } = useGetTasksByColumnQuery(columnId);
+  const { data: tasks = [], isFetching } = useGetTasksByColumnQuery(columnId);
   const [removeTask] = useRemoveTaskMutation();
   const [addTask] = useAddTaskMutation();
   const [isInputOpen, setIsInputOpen] = useState<boolean>(false)
@@ -63,6 +63,7 @@ const TaskList: FC<TaskListProps> = ({ title, columnId, boardId }) => {
       boardId: boardId,
       created: moment(),
       updated: moment(),
+      orderNumber: tasks.length+1,
     };
 
     setNewTask("");
@@ -70,8 +71,8 @@ const TaskList: FC<TaskListProps> = ({ title, columnId, boardId }) => {
     setIsInputOpen(false)
   };
 
-  const onTaskDelete = (taskId: string) => {
-    removeTask(taskId);
+  const onTaskDelete = (taskId: string, columnId: string) => {
+    removeTask({taskId, columnId});
   };
 
   const onTaskOpen = (taskId: string) => {

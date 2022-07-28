@@ -9,7 +9,7 @@ import { ITask } from "entities/task";
 interface TaskItemProp {
   onTaskClick?: (e: React.MouseEvent<HTMLElement>) => void;
   onTaskOpen: (taskId: string) => void;
-  onTaskDelete: (taskId: string) => void;
+  onTaskDelete: (taskId: string, columnId: string) => void;
   task: ITask;
 }
 
@@ -47,7 +47,7 @@ const TaskItem: FC<TaskItemProp> = ({
       style={{ backgroundColor: isDragging ? "black" : "white" }}
       onMouseLeave={() => setVisible(true)}
       onContextMenu={onContextChange}
-      className="relative rounded bg-gray-200 my-2 p-2 shadow text-gray-600 hover:bg-gray-300 hover:text-white transition-all"
+      className="relative rounded bg-gray-200 my-2 p-2 shadow text-gray-600 hover:bg-gray-300 hover:text-gray-400 transition-all"
     >
       <Link ref={dragPreview} className="" to={`task/${task.id}`}>
         {task.title}
@@ -63,7 +63,7 @@ const TaskItem: FC<TaskItemProp> = ({
       >
         <div onMouseLeave={() => setVisible(true)} className="flex flex-col">
           <div
-            onClick={() => onTaskDelete(task.id)}
+            onClick={() => onTaskDelete(task.id, task.columnId)}
             className="bg-gray-100 rounded cursor-pointer text-gray-700 hover:bg-gray-200 py-1 px-5 mb-1"
           >
             Удалить

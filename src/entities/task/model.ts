@@ -10,6 +10,7 @@ export interface ITask {
   boardId: string;
   created: Moment;
   updated: Moment;
+  orderNumber: Number | undefined
 }
 
 export interface IColumn {
