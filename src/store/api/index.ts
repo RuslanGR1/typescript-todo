@@ -11,27 +11,31 @@ export const projectApi = createApi({
   tagTypes: ["Columns", "Tasks", "Boards", "Drag"],
   endpoints: (builder) => ({
 
+    getAllBoards: builder.query({
+      query: () => `boards/`,
+      providesTags: (result: any, error: any, arg: any): any[] => {
+        console.log("getAllBoards", { result, error, arg });
+
+        if (result) {
+          return result.map(({ id }: { id: string }) => ({ type: "Boards" as const, id }))
+        } else {
+          return ["Boards"]
+        }
+      }
+    }),
+
     addBoard: builder.mutation<IBoard, IBoard>({
       query: (board: IBoard) => ({
         url: 'boards/',
         method: 'post',
         body: board,
-      })
-    }),
-
-    getAllBoards: builder.query({
-      query: () => `boards/`,
-      providesTags: ["Boards"]
-    }),
-
-    getAllTasks: builder.query({
-      query: () => `tasks/`,
-      providesTags: ["Tasks"],
+      }),
+      invalidatesTags: ["Boards"]
     }),
 
     getTask: builder.query<ITask, string | undefined>({
       query: (taskId) => `tasks/${taskId}`,
-      providesTags: (returnValue: any, args: any) => [{ type: "Tasks", id: returnValue.id }]
+      providesTags: (returnValue: any, args: any) => [{ type: "Columns", id: returnValue.id }]
     }),
 
     addTask: builder.mutation<any, any>({
@@ -40,10 +44,10 @@ export const projectApi = createApi({
         method: 'post',
         body: task
       }),
-      invalidatesTags: (returnValue, something, args): any => {
-        console.log("addTask", { returnValue, something, args });
+      invalidatesTags: (returnValue: any, error: any, args: any): any[] => {
+        console.log("addTask", { returnValue, error, args });
 
-        return [{ type: "Tasks", id: returnValue.columnId }]
+        return [{ type: "Columns", id: returnValue.column }]
       }
     }),
 
@@ -76,30 +80,41 @@ export const projectApi = createApi({
     }),
 
     getTasksByColumn: builder.query<ITask[], any>({
-      query: (columnId) => `tasks?columnId=${columnId}`,
+      query: (columnId) => `tasks/?columnId=${columnId}`,
       providesTags: (returnValue, _args: any): any => {
         console.log("getTasksByColumn", { returnValue, _args });
-        // uniqTaskByClumn(returnValue)
-        return returnValue && returnValue.map((task: ITask) => ({ type: "Tasks", id: task.columnId }))
+
+        if (returnValue) {
+          return returnValue.map(({ id }: { id: string }) => ({ type: "Columns" as const, id }))
+        } else {
+          return ["Columns"]
+        }
       }
     }),
 
     getColumnsByBoard: builder.query({
-      query: (boardId) => `columns?boardId=${boardId}`,
+      query: (boardId) => `columns/?boardId=${boardId}`,
       providesTags: (returnValue, _args: any): any => {
         console.log("getColumnsByBoard", { returnValue, _args });
 
-        return returnValue.map(
-          (column: IColumn) => ({ type: 'Columns', id: column.boardId }))
+        if (returnValue) {
+          return returnValue.map(({ id }: { id: string }) => ({ type: "Boards" as const, id }))
+        } else {
+          return ["Boards"]
+        }
       }
     }),
 
     getAllColumns: builder.query({
       query: () => ({ url: `columns/` }),
-      providesTags: (returnValue, _args: any): any => {
-        console.log("getAllColumns", { returnValue, _args });
-        return returnValue.map(
-          (column: IColumn) => ({ type: 'Columns', id: column.id }))
+      providesTags: (result: any, error: any, arg: any): any[] => {
+        console.log("getAllColumns", { result, error, arg });
+
+        if (result) {
+          return result.map(({ id }: { id: string }) => ({ type: "Columns" as const, id }))
+        } else {
+          return ["Columns"]
+        }
       }
     }),
 
@@ -109,7 +124,11 @@ export const projectApi = createApi({
         method: 'post',
         body: column
       }),
-      invalidatesTags: ["Boards"]
+      invalidatesTags: (returnValue: any, error: any, args: any): any[] => {
+        console.log("addColumn", { returnValue, error, args });
+
+        return [{ type: "Boards", id: returnValue.board }]
+      }
     }),
 
     dragTask: builder.mutation<ITask, any>({
@@ -119,8 +138,6 @@ export const projectApi = createApi({
         body: { column: targetColumnId }
       }),
       invalidatesTags: (returnValue: any, error: any, args: any): any[] => {
-        console.log("dragTask", { returnValue, error, args });
-
         return [
           { type: "Tasks", id: args.task.columnId },
           { type: "Tasks", id: args.targetColumnId }
@@ -131,7 +148,6 @@ export const projectApi = createApi({
 })
 
 export const {
-  useGetAllTasksQuery,
   useGetTaskQuery,
   useGetAllColumnsQuery,
   useGetTasksByColumnQuery,
@@ -147,3 +163,85 @@ export const {
   useAddColumnMutation,
   useUpdateTaskMutation,
 } = projectApi
+
+
+const getSrc = (initialItem, src = []) => {
+  const entity = initialItem.entity
+
+  src = _.concat([entity, `${entity}Id`], src)
+
+  const parent = _.find(crud, item => item["parnet"] === parent)
+
+  if (parent) {
+    return getSrc(parent, src)
+  } else {
+    return src
+  }
+}
+
+const makeSrc = (initialItem, params) => {
+  const src = getSrc(initialItem)
+
+  // 
+  return _
+  .chain(src)
+  .map((elemnt) => params[element] ? params[element] : elemnt)
+  .join("/")
+  .values()
+}
+
+const construcFn = (builder, entity, method, parent, extraTags) => {
+  const endPoints = {}
+
+  switch (method) {
+    case "get":
+
+      const getSrc
+
+      const getAllFn = builder.query({
+        query: () => `${entity}/`,
+        providesTags: (result: any, error: any, arg: any): any[] => {
+          console.log("getAllBoards", { result, error, arg });
+
+          if (result) {
+            return [...result.map(({ id }: { id: string }) => ({ type: entity, id })), entity]
+          } else {
+            return [entity]
+          }
+        }
+      })
+
+      const getFn = builder.query({
+        query: (id: string) => `${entity}/${id}`,
+        providesTags: (result: any, error: any, arg: any): any[] => {
+          console.log("getAllBoards", { result, error, arg });
+
+          if (result) {
+            return [...result.map(({ id }: { id: string }) => ({ type: entity, id })), entity]
+          } else {
+            return [entity]
+          }
+        }
+      })
+
+
+
+
+      break;
+
+    case "post":
+
+      break;
+
+    case "delete":
+
+      break;
+
+    case "update":
+
+      break;
+
+    default:
+      break;
+  }
+} 
