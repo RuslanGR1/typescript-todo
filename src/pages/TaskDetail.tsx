@@ -1,6 +1,8 @@
 import { ITask } from "entities";
-import { FC, useEffect, useState, Fragment } from "react";
+import { FC, useCallback, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 import { Button } from "shared/ui/Button";
 import Modal from "shared/ui/Modal";
@@ -14,7 +16,7 @@ const TaskDetail: FC<TaskDetailProps> = () => {
   const { data: task } = useGetTaskQuery(taskId);
   const navigate = useNavigate();
   const [updateTask] = useUpdateTaskMutation();
-
+  const [descriptionActive, setDescriptionActive] = useState(false);
   const [currentTask, setCurrentTask] = useState<ITask | any>(task);
 
   useEffect(() => {
@@ -48,7 +50,7 @@ const TaskDetail: FC<TaskDetailProps> = () => {
 
   return (
     <Modal setVisible={setVisible} visible={visible}>
-      <div className="flex flex-col">
+      <div tabIndex={2} className="flex flex-col" onFocus={() => {}}>
         <input
           className="border-none p-2 min-w-[300px] outline-none bg-gray-100 mb-2"
           value={currentTask?.title}
@@ -56,12 +58,23 @@ const TaskDetail: FC<TaskDetailProps> = () => {
           onChange={onFiledChange}
         />
         <p className="my-2">Описание:</p>
-        <textarea
-          className="border-none p-2 min-h-[150px] min-w-[300px] outline-none bg-gray-100"
-          value={currentTask?.description}
-          name="description"
-          onChange={onFiledChange}
-        />
+        {descriptionActive ? (
+          <textarea
+            className="border-none p-2 min-h-[150px] min-w-[300px] outline-none bg-gray-100"
+            value={currentTask?.description}
+            name="description"
+            onChange={onFiledChange}
+          />
+        ) : (
+          <div tabIndex={1} onFocus={() => setDescriptionActive(true)}>
+            <ReactMarkdown
+              className="border-none p-2 min-h-[150px] min-w-[300px] outline-none bg-gray-100"
+              children={currentTask?.description}
+              remarkPlugins={[remarkGfm]}
+            />
+          </div>
+        )}
+
         <p className="my-2">Действия:</p>
         <div className="min-h-[50px]"></div>
         <Button onClick={() => onSave()} title="Сохранить" />
