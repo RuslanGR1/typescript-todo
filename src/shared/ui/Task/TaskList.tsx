@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import { FC, useState } from "react";
+import { FC, useMemo, useState } from "react";
 import moment from "moment";
 import cn from "classnames";
 import { v4 as uuid } from "uuid";
@@ -11,6 +11,8 @@ import {
   useGetTasksByColumnQuery,
   useRemoveTaskMutation,
 } from "store/api";
+import Spinner from "../Spinner";
+import ButtonTransparent from "../ButtonTransparent";
 import { ITask } from "entities/task";
 import { TaskItem } from "./TaskItem";
 import { Dots } from "shared/icons/Dots";
@@ -26,7 +28,7 @@ const TaskList: FC<TaskListProps> = ({ title, columnId, boardId }) => {
   const { data: tasks = [], isFetching } = useGetTasksByColumnQuery(columnId);
   const [removeTask] = useRemoveTaskMutation();
   const [addTask] = useAddTaskMutation();
-  const [isInputOpen, setIsInputOpen] = useState<boolean>(false)
+  const [isInputOpen, setIsInputOpen] = useState<boolean>(false);
   const [newTask, setNewTask] = useState("");
   const navigate = useNavigate();
   const [{ canDrop, isOver }, drop] = useDrop(() => ({
@@ -36,9 +38,15 @@ const TaskList: FC<TaskListProps> = ({ title, columnId, boardId }) => {
       canDrop: monitor.canDrop(),
     }),
     drop: () => ({
-      columnId
-    })
+      columnId,
+    }),
   }));
+
+  const sortedTasks = useMemo(() => {
+    const sortedTasks = tasks.slice();
+    // sortedTasks.sort((a: ITask, b: ITask) => a.orderNumber - b.orderNumber);
+    return sortedTasks;
+  }, [tasks]);
 
   const handleTaskClick = (e: React.MouseEvent<HTMLElement>) => {
     e.preventDefault();
@@ -47,32 +55,26 @@ const TaskList: FC<TaskListProps> = ({ title, columnId, boardId }) => {
 
   const addTaskClick = () => {
     if (!isInputOpen) {
-      setIsInputOpen(true)
-      return
+      setIsInputOpen(true);
+      return;
     }
 
     if (!newTask) return;
 
-    const _task: ITask = {
-      id: uuid(),
-      userId: null,
-      completed: false,
+    const _task = {
       title: newTask,
       description: "",
-      columnId: columnId,
-      boardId: boardId,
-      created: moment(),
-      updated: moment(),
-      orderNumber: tasks.length+1,
+      column: columnId,
+      board: boardId,
     };
 
     setNewTask("");
     addTask(_task);
-    setIsInputOpen(false)
+    setIsInputOpen(false);
   };
 
   const onTaskDelete = (taskId: string, columnId: string) => {
-    removeTask({taskId, columnId});
+    removeTask({ taskId, columnId });
   };
 
   const onTaskOpen = (taskId: string) => {
@@ -83,23 +85,24 @@ const TaskList: FC<TaskListProps> = ({ title, columnId, boardId }) => {
     <div
       ref={drop}
       className={cn(
-        " min-w-[250px] h-fit w-[300px] bg-gray-100 overflow-y-auto flex flex-col p-2 rounded shadow mx-2"
+        "h-fit min-w-[280px] w-[300px] bg-gray-100 overflow-y-auto flex flex-col p-2 rounded shadow mx-2"
       )}
     >
       <div className="font-bold text-lg mb-2 flex items-center justify-between">
         {title}
         <div className="flex items-center">
           <div className={"cursor-pointer mr-2"}>
-            {isFetching && <Refresh />}
+            <ButtonTransparent>
+              <Spinner loading={isFetching} />
+            </ButtonTransparent>
           </div>
           <div className={"cursor-pointer"}>
             <Dots />
           </div>
         </div>
-
       </div>
       <div className="overflow-y-auto">
-        {tasks?.map((task: ITask) => (
+        {sortedTasks?.map((task: ITask) => (
           <TaskItem
             key={task.id}
             task={task}
@@ -120,7 +123,7 @@ const TaskList: FC<TaskListProps> = ({ title, columnId, boardId }) => {
         type="text"
         value={newTask}
         onChange={(e) => setNewTask(e.target.value)}
-        className={cn("p-2 mt-2 outline-none block", { "hidden": !isInputOpen })}
+        className={cn("p-2 mt-2 outline-none block", { hidden: !isInputOpen })}
       />
     </div>
   );

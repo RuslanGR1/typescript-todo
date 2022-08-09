@@ -1,0 +1,35 @@
+.loader {
+  position: relative;
+  text-indent: -9999em;
+  animation: mulShdSpin 1.3s infinite linear;
+}
+
+@keyframes mulShdSpin {
+  0% {
+    transform: rotate(0deg)
+  }
+  12.5% {
+    transform: rotate(-45deg)
+  }
+  25% {
+    transform: rotate(-90deg)
+  }
+  37.5% {
+    transform: rotate(-135deg)
+  }
+  50% {
+    transform: rotate(-170deg)
+  }
+  62.5% {
+    transform: rotate(-215deg)
+  }
+  75% {
+    transform: rotate(-260deg)
+  }
+  87.5% {
+    transform: rotate(-315deg)
+  }
+  100% {
+    transform: rotate(-360deg)
+  }
+}

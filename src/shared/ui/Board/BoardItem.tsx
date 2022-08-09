@@ -9,7 +9,7 @@ interface Props {
 export const BoardItem: FunctionComponent<Props> = ({ board }) => {
   return (
     <Link
-      className="shadow rounded-xl bg-gray-500 hover:bg-gray-400 min-h-[120px] min-w-[300px] max-w-[300px] block text-white p-4 m-2"
+      className="shadow rounded hover:shadow-lg bg-gray-100 min-h-[120px] min-w-[300px] max-w-[300px] block text-gray-900 p-4"
       to={`board/${board?.id}`}
     >
       {board?.title}

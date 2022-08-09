@@ -1,7 +1,7 @@
 import type { Moment } from 'moment'
 
 export interface ITask {
-  userId: number | null;
+  userId?: number | null;
   id: string;
   title: string;
   completed: boolean;
@@ -10,7 +10,7 @@ export interface ITask {
   boardId: string;
   created: Moment;
   updated: Moment;
-  orderNumber: Number | undefined
+  orderNumber: number;
 }
 
 export interface IColumn {

@@ -1,0 +1,16 @@
+.columnContainer {
+  scrollbar-width: thin;
+}
+
+.columnContainer::-webkit-scrollbar {
+  width: 8px;
+}
+
+.columnContainer::-webkit-scrollbar-track {
+  background-color: lightgray;
+  height: 8px;
+}
+
+.columnContainer::-webkit-scrollbar-thumb {
+  background-color: darkgrey;
+}

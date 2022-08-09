@@ -2,15 +2,13 @@ import { FC, useState } from "react";
 
 import { useParams } from "react-router-dom";
 import { TaskList } from "../shared/ui/Task";
-import {
-  useAddColumnMutation,
-  useGetColumnsByBoardQuery,
-} from "store/api";
+import { useAddColumnMutation, useGetColumnsByBoardQuery } from "store/api";
 import type { IColumn } from "entities";
 import cn from "classnames";
 import { v4 as uuid } from "uuid";
+import styles from "./styles.module.css";
 
-interface Props { }
+interface Props {}
 
 const BoardPage: FC<Props> = () => {
   const { boardId } = useParams();
@@ -21,11 +19,10 @@ const BoardPage: FC<Props> = () => {
   const addColumn = () => {
     if (!newColTask || !boardId) return;
 
-    const _column: IColumn = {
-      id: uuid(),
+    const _column: IColumn | any = {
       title: newColTask,
       description: "",
-      boardId: boardId,
+      board: boardId,
     };
     setColumn(_column);
     setNewColTask("");
@@ -35,7 +32,13 @@ const BoardPage: FC<Props> = () => {
     <div className="mt-5 mx-auto flex flex-col">
       {/* <TaskSearch />
       <TaskFilter /> */}
-      <div className="flex overflow-x-auto">
+      <div
+        className={cn(
+          "flex overflow-x-auto column-container",
+          styles.columnContainer
+        )}
+        style={{ height: "90vh" }}
+      >
         {boardId &&
           columns?.map((column: IColumn) => (
             <TaskList
@@ -47,7 +50,7 @@ const BoardPage: FC<Props> = () => {
           ))}
         <div
           className={cn(
-            "h-fit min-w-[250px] w-[300px] bg-gray-100 overflow-y-auto flex h-content flex-col p-2 rounded shadow mx-2"
+            "h-fit min-w-[280px] w-[300px] bg-gray-100 overflow-y-auto flex h-content flex-col p-2 rounded shadow mx-2"
           )}
         >
           <button

@@ -1,16 +1,21 @@
-import React, { FC, useEffect, useState } from "react";
+import { ITask } from "entities";
+import { FC, useEffect, useState, Fragment } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+
 import { Button } from "shared/ui/Button";
+import Modal from "shared/ui/Modal";
+import { useGetTaskQuery, useUpdateTaskMutation } from "store/api";
 
-import { useGetTaskQuery } from "store/api";
-
-interface TaskDetailProps { }
+interface TaskDetailProps {}
 
 const TaskDetail: FC<TaskDetailProps> = () => {
   const { taskId, boardId } = useParams();
   const [visible, setVisible] = useState<boolean>(true);
   const { data: task } = useGetTaskQuery(taskId);
   const navigate = useNavigate();
+  const [updateTask] = useUpdateTaskMutation();
+
+  const [currentTask, setCurrentTask] = useState<ITask | any>(task);
 
   useEffect(() => {
     if (!visible) {
@@ -18,32 +23,50 @@ const TaskDetail: FC<TaskDetailProps> = () => {
     }
   }, [boardId, navigate, visible]);
 
-  const onModalClick = (e: React.MouseEvent<HTMLElement>) => {
-    e.stopPropagation();
+  useEffect(() => {
+    setCurrentTask(task);
+  }, [task]);
+
+  const onSave = () => {
+    const updatedTask = { ...currentTask };
+    console.log(currentTask);
+    if (updatedTask) {
+      setCurrentTask(updatedTask);
+      updateTask({ task: currentTask });
+    }
+  };
+
+  const onFiledChange = (
+    e:
+      | React.ChangeEvent<HTMLElement>
+      | React.ChangeEventHandler<HTMLInputElement>
+      | React.ChangeEventHandler<HTMLTextAreaElement>
+      | any
+  ) => {
+    setCurrentTask({ ...currentTask, [e.target.name]: e.target.value });
   };
 
   return (
-    <div
-      className="absolute top-0 right-0 flex justify-center items-center mx-auto w-screen h-screen bg-slate-100 overflow-hidden"
-      style={{ background: "rgba(0, 0, 0, 0.5)" }}
-      onClick={() => setVisible(false)}
-    >
-      <div
-        onClick={onModalClick}
-        className="bg-gray-200 p-5 rounded shadow w-[400px] h-[400px]"
-      >
-        <div className="mb-4">{taskId}</div>
+    <Modal setVisible={setVisible} visible={visible}>
+      <div className="flex flex-col">
         <input
-          className="border p-2 min-w-[300px] outline-none bg-gray-100 mb-2"
-          value={task?.title}
+          className="border-none p-2 min-w-[300px] outline-none bg-gray-100 mb-2"
+          value={currentTask?.title}
+          name="title"
+          onChange={onFiledChange}
         />
+        <p className="my-2">Описание:</p>
         <textarea
-          className="border p-2 min-h-[150px] min-w-[300px] outline-none bg-gray-100"
-          value={task?.description}
+          className="border-none p-2 min-h-[150px] min-w-[300px] outline-none bg-gray-100"
+          value={currentTask?.description}
+          name="description"
+          onChange={onFiledChange}
         />
-        <Button title="Сохранить" />
+        <p className="my-2">Действия:</p>
+        <div className="min-h-[50px]"></div>
+        <Button onClick={() => onSave()} title="Сохранить" />
       </div>
-    </div>
+    </Modal>
   );
 };
 
