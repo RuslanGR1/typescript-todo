@@ -49,7 +49,7 @@ export const projectApi = createApi({
 
     updateTask: builder.mutation<any, any>({
       query: ({ task }: { task: ITask }) => ({
-        url: `tasks/${task.id}`,
+        url: `tasks/${task.id}/`,
         method: 'put',
         body: { ...task }
       }),
@@ -65,7 +65,7 @@ export const projectApi = createApi({
 
     removeTask: builder.mutation<ITask, any>({
       query: ({ taskId, columnId }: { taskId: string, columnId: string }) => ({
-        url: `tasks/${taskId}`,
+        url: `tasks/${taskId}/`,
         method: 'DELETE'
       }),
       invalidatesTags: (returnValue, something, args): any => {
@@ -95,7 +95,7 @@ export const projectApi = createApi({
     }),
 
     getAllColumns: builder.query({
-      query: () => ({ url: `columns` }),
+      query: () => ({ url: `columns/` }),
       providesTags: (returnValue, _args: any): any => {
         console.log("getAllColumns", { returnValue, _args });
         return returnValue.map(
@@ -114,9 +114,9 @@ export const projectApi = createApi({
 
     dragTask: builder.mutation<ITask, any>({
       query: ({ targetColumnId, task }: { targetColumnId: string; task: ITask }) => ({
-        url: `tasks/${task.id}`,
-        method: 'put',
-        body: { ...task, columnId: targetColumnId }
+        url: `tasks/${task.id}/`,
+        method: 'patch',
+        body: { column: targetColumnId }
       }),
       invalidatesTags: (returnValue: any, error: any, args: any): any[] => {
         console.log("dragTask", { returnValue, error, args });
