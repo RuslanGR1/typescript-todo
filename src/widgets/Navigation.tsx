@@ -9,13 +9,13 @@ const Navigation: FC = () => {
       </Link>
       <div className="flex justify-between">
         <Link
-          to="signup"
+          to="auth/signup"
           className="mr-4 hover:bg-white hover:text-gray-600 py-1 px-4 rounded cursor-pointer transition-all"
         >
           Signup
         </Link>
         <Link
-          to="signin"
+          to="auth/signin"
           className="mr-4 hover:bg-white hover:text-gray-600 py-1 px-4 rounded cursor-pointer"
         >
           Signin
