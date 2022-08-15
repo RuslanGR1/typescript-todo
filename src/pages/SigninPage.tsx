@@ -1,17 +1,30 @@
 import { FC } from "react";
 import { useForm } from "react-hook-form";
+import { useAppDispatch } from "store/hooks";
+import { useNavigate } from "react-router-dom";
+import { useLoginMutation } from "features/auth/authApiSlice";
+import { setCredentials } from "features/auth/authSlice";
 
 interface Props {}
 
 const SignupPage: FC<Props> = () => {
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const [login, { isLoading }] = useLoginMutation();
+
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
 
-  const onSubmit = handleSubmit((data) => {
-    console.log(data);
+  const onSubmit = handleSubmit(async (data) => {
+    const response = await login({ ...data });
+    console.log("response", response, typeof response);
+    
+    dispatch(setCredentials({ ...response }));
+
+    navigate("/");
   });
 
   return (

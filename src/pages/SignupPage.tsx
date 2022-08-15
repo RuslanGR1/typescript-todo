@@ -1,18 +1,21 @@
 import { FC } from "react";
 import { useForm } from "react-hook-form";
+import { useAppDispatch } from "store/hooks";
 
 interface Props {}
 
 const SignupPage: FC<Props> = () => {
+  const dispatch = useAppDispatch();
+
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
 
-  const onSubmit = handleSubmit((data) => {
-    console.log(data);
-  });
+  const onSubmit = handleSubmit(
+    ({ username, password, passwordRepeat, firstName, lastName }) => {}
+  );
 
   return (
     <div className="wrapper flex justify-center items-center">
@@ -22,6 +25,32 @@ const SignupPage: FC<Props> = () => {
           className="py-5 pb-10 px-10 flex flex-col space-y-[20px]"
         >
           <h1 className="text-4xl">Регистрация</h1>
+          <div className="flex justify-between space-x-4">
+            <div className="flex flex-col w-[100%]">
+              <label className="mb-2" htmlFor="username">
+                Имя
+              </label>
+              <input
+                autoFocus
+                id="username"
+                {...register("firstName", { required: true })}
+                className="outline-0 border-0 rounded p-2 shadow"
+              />
+            </div>
+
+            <div className="flex flex-col w-[100%]">
+              <label className="mb-2" htmlFor="username">
+                Фамилия
+              </label>
+              <input
+                autoFocus
+                id="username"
+                {...register("lastName", { required: true })}
+                className="outline-0 border-0 rounded p-2 shadow"
+              />
+            </div>
+          </div>
+
           <div className="flex flex-col">
             <label className="mb-2" htmlFor="username">
               Имя пользователя

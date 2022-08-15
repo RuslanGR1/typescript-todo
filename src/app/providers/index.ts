@@ -5,7 +5,7 @@ import { withStore } from './with-store'
 import { WithDnd } from './with-dnd';
 
 export const withProviders = compose(
-    withRouter,
     withStore,
+    withRouter,
     WithDnd,
 )
