@@ -4,6 +4,6 @@ export default {
         window.location.href = '/'
     },
     login: () => {
-        window.location.href = 'auth/login'
+        window.location.href = 'auth/signin'
     }
 }

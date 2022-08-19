@@ -1,11 +1,12 @@
 import { FC, useState } from "react";
-
+import cn from "classnames";
 import { useParams } from "react-router-dom";
+
 import { TaskList } from "../shared/ui/Task";
 import { useAddColumnMutation, useGetColumnsByBoardQuery } from "store/api";
+import Spinner from "shared/ui/Spinner";
 import type { IColumn } from "entities";
-import cn from "classnames";
-import { v4 as uuid } from "uuid";
+
 import styles from "./styles.module.css";
 
 interface Props {}
@@ -13,7 +14,8 @@ interface Props {}
 const BoardPage: FC<Props> = () => {
   const { boardId } = useParams();
   const [setColumn] = useAddColumnMutation();
-  const { data: columns } = useGetColumnsByBoardQuery(boardId);
+  const { data: columns = [], isLoading } = useGetColumnsByBoardQuery(boardId);
+
   const [newColTask, setNewColTask] = useState("");
 
   const addColumn = () => {
@@ -28,7 +30,11 @@ const BoardPage: FC<Props> = () => {
     setNewColTask("");
   };
 
-  return (
+  const content = isLoading ? (
+    <div className="flex m-5 space-x-4 items-center">
+      <Spinner /> <p>Loading...</p>
+    </div>
+  ) : (
     <div className="mt-5 mx-auto flex flex-col">
       {/* <TaskSearch />
       <TaskFilter /> */}
@@ -71,6 +77,7 @@ const BoardPage: FC<Props> = () => {
       </div>
     </div>
   );
+  return content;
 };
 
 export default BoardPage;

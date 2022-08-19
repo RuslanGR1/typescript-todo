@@ -22,7 +22,7 @@ export default async ({
 
     if (response.status === 401) {
         console.log("unathorized")
-        location.login()
+        // location.login()
     }
-    return response.data
+    return response
 }

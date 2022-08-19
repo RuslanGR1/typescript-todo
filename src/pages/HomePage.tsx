@@ -1,12 +1,10 @@
-import moment from "moment";
-import { v4 as uuid } from "uuid";
-import { Fragment, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { useGetAllBoardsQuery, useAddBoardMutation } from "store/api";
-import { BoardItem, BoardList } from "shared/ui/Board";
-import type { IBoard } from "entities";
+import { BoardList } from "shared/ui/Board";
 import Modal from "shared/ui/Modal";
 import { Button } from "shared/ui/Button";
+import Spinner from "shared/ui/Spinner";
 
 const HomePage = () => {
   const { data: boards } = useGetAllBoardsQuery("");
@@ -33,7 +31,11 @@ const HomePage = () => {
     setBoardTitle("");
   };
 
-  return (
+  const content = !boards ? (
+    <div className="flex m-5 space-x-4 items-center">
+      <Spinner /> <p>Loading...</p>
+    </div>
+  ) : (
     <div className="px-2">
       <h2 className="my-2 text-2xl">Все доски</h2>
       <BoardList boards={boards} />
@@ -62,6 +64,7 @@ const HomePage = () => {
       </Modal>
     </div>
   );
+  return content;
 };
 
 export default HomePage;

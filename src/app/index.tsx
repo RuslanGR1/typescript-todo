@@ -14,12 +14,9 @@ const App = () => {
   const navigate = useNavigate();
   const [isAuth, setIsAuth] = useState(false);
   const token = useSelector(selectCurrentToken);
-  console.log(isAuth, token);
 
   useEffect(() => {
     if (token) {
-      console.log("setauth");
-
       setIsAuth(true);
     } else {
       setIsAuth(false);

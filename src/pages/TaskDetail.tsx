@@ -1,5 +1,5 @@
 import { ITask } from "entities";
-import { FC, useCallback, useEffect, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -31,7 +31,6 @@ const TaskDetail: FC<TaskDetailProps> = () => {
 
   const onSave = () => {
     const updatedTask = { ...currentTask };
-    console.log(currentTask);
     if (updatedTask) {
       setCurrentTask(updatedTask);
       updateTask({ task: currentTask });

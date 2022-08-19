@@ -16,15 +16,23 @@ const SignupPage: FC<Props> = () => {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm();
 
   const onSubmit = handleSubmit(async (data) => {
-    const response = await login({ ...data });
-    console.log("response", response, typeof response);
-    
-    dispatch(setCredentials({ ...response }));
-
-    navigate("/");
+    login({ ...data }).then((response: any) => {
+      if (response.error) {
+        if (response.error.status === 401) {
+          reset();
+          alert(response.error.data.detail);
+        } else {
+          console.log("Error", response);
+        }
+      } else {
+        dispatch(setCredentials({ ...response }));
+        navigate("/");
+      }
+    });
   });
 
   return (
