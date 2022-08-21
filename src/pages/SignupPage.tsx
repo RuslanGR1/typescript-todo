@@ -1,11 +1,20 @@
 import { FC } from "react";
 import { useForm } from "react-hook-form";
 import { useAppDispatch } from "store/hooks";
+import { useNavigate } from "react-router-dom";
+import {
+  useRegisterMutation,
+  useLoginMutation,
+} from "features/auth/authApiSlice";
+import { setCredentials } from "features/auth/authSlice";
 
 interface Props {}
 
 const SignupPage: FC<Props> = () => {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const [registerUser] = useRegisterMutation();
+  const [login] = useLoginMutation();
 
   const {
     register,
@@ -14,7 +23,27 @@ const SignupPage: FC<Props> = () => {
   } = useForm();
 
   const onSubmit = handleSubmit(
-    ({ username, password, passwordRepeat, firstName, lastName }) => {}
+    ({ username, password, firstName: first_name, lastName: last_name }) => {
+      registerUser({
+        first_name,
+        last_name,
+        username,
+        password,
+      }).then((response) => {
+        login({ username, password }).then((response: any) => {
+          if (response.error) {
+            if (response.error.status === 401) {
+              alert(response.error.data.detail);
+            } else {
+              console.log("Error", response);
+            }
+          } else {
+            dispatch(setCredentials({ ...response }));
+            navigate("/");
+          }
+        });
+      });
+    }
   );
 
   return (
