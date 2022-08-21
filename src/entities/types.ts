@@ -6,6 +6,7 @@ export interface ITask {
   title: string;
   completed: boolean;
   description: string;
+  column: string;
   columnId: string;
   boardId: string;
   created: Moment;

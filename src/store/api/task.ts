@@ -5,14 +5,10 @@ export const taskApi = apiSlice.injectEndpoints({
   endpoints: builder => ({
     getTasksByColumn: builder.query<ITask[], any>({
       query: (columnId) => `tasks/?columnId=${columnId}`,
-      providesTags: (returnValue: any, _args: any): any => {
-        console.log("getTasksByColumn", { returnValue, _args });
-        // uniqTaskByClumn(returnValue)
-        if (returnValue) {
-          return [{ type: "Task", id: "NEW" }, ...returnValue.map((task: ITask) => ({ type: "Task", id: task.id }))]
-        } else {
-          return [{ type: "Task" }]
-        }
+      providesTags: (returnValue: any, err: any, columnId: any): any => {
+        console.log("getTasksByColumn", { returnValue, err, columnId });
+
+        return [{ type: "Tasks", id: columnId }]
       }
     }),
 
@@ -30,7 +26,7 @@ export const taskApi = apiSlice.injectEndpoints({
       invalidatesTags: (returnValue, something, args): any => {
         console.log("addTask", { returnValue, something, args });
 
-        return [{ type: "Column", id: returnValue.column }, { type: "Task", id: "NEW" }]
+        return [{ type: "Tasks", id: args.column }]
       }
     }),
 
@@ -44,7 +40,7 @@ export const taskApi = apiSlice.injectEndpoints({
         console.log("updateTask", { returnValue, error, args });
 
         return [
-          { type: "Column", id: returnValue.column },
+          { type: "Tasks", id: returnValue.column },
           { type: "Task", id: returnValue.id }
         ]
       }
@@ -58,7 +54,7 @@ export const taskApi = apiSlice.injectEndpoints({
       invalidatesTags: (returnValue, something, args): any => {
         console.log("removeTask", { returnValue, something, args });
 
-        return [{ type: "Task", id: args.taskId }]
+        return [{ type: "Tasks", id: args.columnId }]
       }
     }),
 
@@ -72,8 +68,8 @@ export const taskApi = apiSlice.injectEndpoints({
         console.log("dragTask", { returnValue, error, args });
 
         return [
-          { type: "Column", id: args.task.column },
-          { type: "Column", id: args.targetColumnId },
+          { type: "Tasks", id: args.task.column },
+          { type: "Tasks", id: args.targetColumnId },
           { type: "Task", id: args.task.id },
         ]
       }

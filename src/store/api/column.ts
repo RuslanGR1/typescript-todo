@@ -6,16 +6,10 @@ export const columnApi = apiSlice.injectEndpoints({
 
     getColumnsByBoard: builder.query({
       query: (boardId) => `columns/?boardId=${boardId}`,
-      providesTags: (returnValue, _args: any): any => {
-        console.log("getColumnsByBoard", { returnValue, _args });
+      providesTags: (returnValue, err, boardId: any): any => {
+        console.log("getColumnsByBoard", { returnValue, err, boardId });
 
-        if (returnValue) {
-          return [{ type: "Column", id: "NEW" }, ...returnValue.map(
-            (column: IColumn) => ({ type: 'Column', id: column.id }))]
-        } else {
-          return { type: 'Column' }
-        }
-
+        return [{ type: "Columns", id: boardId }]
       }
     }),
 
@@ -28,7 +22,7 @@ export const columnApi = apiSlice.injectEndpoints({
       invalidatesTags: (returnValue: any, error: any, args: any): any => {
         console.log("addColumn", { returnValue, error, args });
 
-        return [{ type: "Board", id: returnValue.board }, { type: "Column", id: "NEW" }]
+        return [{ type: "Columns", id: args.board }]
       }
     }),
   })

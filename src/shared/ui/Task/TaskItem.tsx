@@ -75,7 +75,7 @@ const TaskItem: FC<TaskItemProp> = ({
       >
         <div onMouseLeave={() => setVisible(true)} className="flex flex-col">
           <div
-            onClick={() => onTaskDelete(task.id, task.columnId)}
+            onClick={() => onTaskDelete(task.id, task.column)}
             className="rounded cursor-pointer bg-red-300 text-gray-700 hover:bg-red-400 py-1 px-5 mb-1"
           >
             Удалить

@@ -1,1 +1,1 @@
-export const tags = ["Column", "Task", "Board", "Drag"]
+export const tags = ["Columns", "Tasks", "Task", "Boards", "Drag"]

@@ -9,7 +9,7 @@ interface Props {
 const BoardList: FC<Props> = (props) => {
   const { boards } = props;
   return (
-    <ul className={"flex items-center space-x-3"}>
+    <ul className={"flex items-center flex-wrap gap-3"}>
       {boards?.map((board: IBoard) => (
         <BoardItem key={board.id} board={board} />
       ))}

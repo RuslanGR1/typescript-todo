@@ -9,7 +9,11 @@ export const boardApi = apiSlice.injectEndpoints({
         method: 'post',
         body: board
       }),
-      invalidatesTags: [{ type: "Board", id: "NEW" }]
+      invalidatesTags: (result: any, err, args) => {
+        console.log("addBoard", { result, err, args });
+
+        return [{ type: "Boards" }]
+      }
     }),
 
     getAllBoards: builder.query({
@@ -17,16 +21,10 @@ export const boardApi = apiSlice.injectEndpoints({
         url: `boards/`,
         credentials: 'include'
       }),
-      providesTags: (returnValue, _args: any): any => {
-        console.log("getAllBoards", { returnValue, _args });
+      providesTags: (result: any, error, arg): any => {
+        console.log("getAllBoards", { result, error, arg });
 
-        if (returnValue) {
-          return [...returnValue.map(
-            (board: IBoard) => ({ type: 'Board', id: board.id })), { type: "Board", id: "NEW" }]
-        } else {
-          return { type: "Board" }
-        }
-
+        return [{ type: "Boards" }]
       }
     }),
   })
