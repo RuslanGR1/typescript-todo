@@ -5,21 +5,17 @@ export const columnApi = apiSlice.injectEndpoints({
   endpoints: builder => ({
 
     getColumnsByBoard: builder.query({
-      query: (boardId) => `columns?boardId=${boardId}`,
+      query: (boardId) => `columns/?boardId=${boardId}`,
       providesTags: (returnValue, _args: any): any => {
         console.log("getColumnsByBoard", { returnValue, _args });
 
-        return returnValue.map(
-          (column: IColumn) => ({ type: 'Columns', id: column.boardId }))
-      }
-    }),
+        if (returnValue) {
+          return [{ type: "Column", id: "NEW" }, ...returnValue.map(
+            (column: IColumn) => ({ type: 'Column', id: column.id }))]
+        } else {
+          return { type: 'Column' }
+        }
 
-    getAllColumns: builder.query({
-      query: () => ({ url: `columns/` }),
-      providesTags: (returnValue, _args: any): any => {
-        console.log("getAllColumns", { returnValue, _args });
-        return returnValue.map(
-          (column: IColumn) => ({ type: 'Columns', id: column.id }))
       }
     }),
 
@@ -29,13 +25,16 @@ export const columnApi = apiSlice.injectEndpoints({
         method: 'post',
         body: column
       }),
-      invalidatesTags: ["Boards"]
+      invalidatesTags: (returnValue: any, error: any, args: any): any => {
+        console.log("addColumn", { returnValue, error, args });
+
+        return [{ type: "Board", id: returnValue.board }, { type: "Column", id: "NEW" }]
+      }
     }),
   })
 })
 
 export const {
-  useGetAllColumnsQuery,
   useGetColumnsByBoardQuery,
   useAddColumnMutation,
 } = columnApi

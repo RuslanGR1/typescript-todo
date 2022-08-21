@@ -8,7 +8,8 @@ export const boardApi = apiSlice.injectEndpoints({
         url: 'boards/',
         method: 'post',
         body: board
-      })
+      }),
+      invalidatesTags: [{ type: "Board", id: "NEW" }]
     }),
 
     getAllBoards: builder.query({
@@ -16,7 +17,17 @@ export const boardApi = apiSlice.injectEndpoints({
         url: `boards/`,
         credentials: 'include'
       }),
-      providesTags: ["Boards"]
+      providesTags: (returnValue, _args: any): any => {
+        console.log("getAllBoards", { returnValue, _args });
+
+        if (returnValue) {
+          return [...returnValue.map(
+            (board: IBoard) => ({ type: 'Board', id: board.id })), { type: "Board", id: "NEW" }]
+        } else {
+          return { type: "Board" }
+        }
+
+      }
     }),
   })
 })

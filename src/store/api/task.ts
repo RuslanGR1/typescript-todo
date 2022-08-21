@@ -4,22 +4,21 @@ import { ITask } from "entities";
 export const taskApi = apiSlice.injectEndpoints({
   endpoints: builder => ({
     getTasksByColumn: builder.query<ITask[], any>({
-      query: (columnId) => `tasks?columnId=${columnId}`,
-      providesTags: (returnValue, _args: any): any => {
+      query: (columnId) => `tasks/?columnId=${columnId}`,
+      providesTags: (returnValue: any, _args: any): any => {
         console.log("getTasksByColumn", { returnValue, _args });
         // uniqTaskByClumn(returnValue)
-        return returnValue && returnValue.map((task: ITask) => ({ type: "Tasks", id: task.columnId }))
+        if (returnValue) {
+          return [{ type: "Task", id: "NEW" }, ...returnValue.map((task: ITask) => ({ type: "Task", id: task.id }))]
+        } else {
+          return [{ type: "Task" }]
+        }
       }
-    }),
-
-    getAllTasks: builder.query({
-      query: () => `tasks/`,
-      providesTags: ["Tasks"],
     }),
 
     getTask: builder.query<ITask, string | undefined>({
       query: (taskId) => `tasks/${taskId}`,
-      providesTags: (returnValue: any, args: any) => [{ type: "Tasks", id: returnValue.id }]
+      providesTags: (returnValue: any, args: any): any => [{ type: "Task", id: returnValue.id }]
     }),
 
     addTask: builder.mutation<any, any>({
@@ -31,7 +30,7 @@ export const taskApi = apiSlice.injectEndpoints({
       invalidatesTags: (returnValue, something, args): any => {
         console.log("addTask", { returnValue, something, args });
 
-        return [{ type: "Tasks", id: returnValue.columnId }]
+        return [{ type: "Column", id: returnValue.column }, { type: "Task", id: "NEW" }]
       }
     }),
 
@@ -45,21 +44,21 @@ export const taskApi = apiSlice.injectEndpoints({
         console.log("updateTask", { returnValue, error, args });
 
         return [
-          { type: "Tasks", id: args.task.columnId },
-          { type: "Tasks", id: args.targetColumnId }
+          { type: "Column", id: returnValue.column },
+          { type: "Task", id: returnValue.id }
         ]
       }
     }),
 
     removeTask: builder.mutation<ITask, any>({
-      query: ({ taskId, columnId }: { taskId: string, columnId: string }) => ({
+      query: ({ taskId }: { taskId: string }) => ({
         url: `tasks/${taskId}/`,
         method: 'DELETE'
       }),
       invalidatesTags: (returnValue, something, args): any => {
         console.log("removeTask", { returnValue, something, args });
 
-        return [{ type: "Tasks", id: args.columnId }]
+        return [{ type: "Task", id: args.taskId }]
       }
     }),
 
@@ -73,8 +72,9 @@ export const taskApi = apiSlice.injectEndpoints({
         console.log("dragTask", { returnValue, error, args });
 
         return [
-          { type: "Tasks", id: args.task.columnId },
-          { type: "Tasks", id: args.targetColumnId }
+          { type: "Column", id: args.task.column },
+          { type: "Column", id: args.targetColumnId },
+          { type: "Task", id: args.task.id },
         ]
       }
     })
@@ -83,7 +83,6 @@ export const taskApi = apiSlice.injectEndpoints({
 
 export const {
   useGetTasksByColumnQuery,
-  useGetAllTasksQuery,
   useGetTaskQuery,
   useAddTaskMutation,
   useRemoveTaskMutation,
