@@ -4,9 +4,8 @@ import cn from "classnames";
 import { useDrag } from "react-dnd";
 
 import MenuAlt from "shared/icons/MenuAlt";
-import Chat from "shared/icons/Chat";
 import { useDragTaskMutation } from "store/api";
-import { ITask } from "entities/task";
+import { ITask } from "entities";
 
 interface TaskItemProp {
   onTaskClick?: (e: React.MouseEvent<HTMLElement>) => void;

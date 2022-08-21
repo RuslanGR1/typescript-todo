@@ -1,10 +1,9 @@
-import { IBoard } from "entities/board";
+import { IBoard } from "entities";
 import { BoardItem } from "./BoardItem";
 import { FC } from "react";
 
-
 interface Props {
-  boards: IBoard[]
+  boards: IBoard[];
 }
 
 const BoardList: FC<Props> = (props) => {
@@ -16,6 +15,6 @@ const BoardList: FC<Props> = (props) => {
       ))}
     </ul>
   );
-}
+};
 
 export { BoardList };

@@ -19,3 +19,10 @@ export interface IColumn {
   description: string;
   boardId: string;
 }
+
+export interface IBoard {
+  title: string;
+  id: string;
+  created: Moment;
+  updated: Moment;
+}

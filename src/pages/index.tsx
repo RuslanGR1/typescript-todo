@@ -2,11 +2,10 @@ import { Routes, Route } from "react-router-dom";
 
 import HomePage from "./HomePage";
 import TaskDetail from "./TaskDetail";
-import BoardPage from "pages/BoardPage";
-
+import SignupPage from "./SignupPage";
+import SigninPage from "./SigninPage";
+import BoardPage from "./BoardPage";
 import RequireAuth from "features/auth/RequireAuth";
-import SignupPage from "pages/SignupPage";
-import SigninPage from "pages/SigninPage";
 import Layout from "app/layout";
 
 export const Routing = () => {

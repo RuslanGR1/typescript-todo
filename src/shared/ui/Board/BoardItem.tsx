@@ -1,4 +1,4 @@
-import { IBoard } from "entities/board";
+import { IBoard } from "entities";
 import { FunctionComponent } from "react";
 import { Link } from "react-router-dom";
 

@@ -1,8 +1,6 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import { FC, useMemo, useState } from "react";
-import moment from "moment";
 import cn from "classnames";
-import { v4 as uuid } from "uuid";
 import { useDrop } from "react-dnd";
 import { useNavigate } from "react-router-dom";
 
@@ -13,10 +11,9 @@ import {
 } from "store/api";
 import Spinner from "../Spinner";
 import ButtonTransparent from "../ButtonTransparent";
-import { ITask } from "entities/task";
+import { ITask } from "entities";
 import { TaskItem } from "./TaskItem";
 import { Dots } from "shared/icons/Dots";
-import { Refresh } from "shared/icons/Refresh";
 
 interface TaskListProps {
   title?: string;
