@@ -2,7 +2,7 @@ import { Fragment, useEffect, useState } from "react";
 
 import Navigation from "widgets/Navigation";
 import { withProviders } from "./providers";
-import { Routing } from "routes/mainRoute";
+import { Routing } from "pages";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "shared/hooks/redux";
 import { logOut, selectCurrentToken } from "features/auth/authSlice";

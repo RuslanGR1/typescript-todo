@@ -1,12 +1,11 @@
-import React, { FC, ReactNode } from "react";
+import React, { FC } from "react";
 
-type Props = {
-  children: ReactNode;
+interface Props extends React.HTMLAttributes<HTMLDivElement> {
   onClick?: (e: React.MouseEvent<HTMLElement>) => void;
-};
+}
 
-const ButtonTransparent: FC<Props> = ({ children, onClick }) => (
-  <div className="" onClick={onClick}>
+const ButtonTransparent: FC<Props> = ({ children, onClick, ...props }) => (
+  <div {...props} onClick={onClick}>
     {children}
   </div>
 );

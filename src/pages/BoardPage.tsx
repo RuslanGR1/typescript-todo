@@ -1,6 +1,7 @@
 import { FC, useState } from "react";
 import cn from "classnames";
 import { useParams } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 
 import { TaskList } from "../shared/ui/Task";
 import { useAddColumnMutation, useGetColumnsByBoardQuery } from "store/api";
@@ -75,6 +76,7 @@ const BoardPage: FC<Props> = () => {
           />
         </div>
       </div>
+      <Outlet />
     </div>
   );
   return content;

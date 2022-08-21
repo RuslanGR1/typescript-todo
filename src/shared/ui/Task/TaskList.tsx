@@ -92,9 +92,11 @@ const TaskList: FC<TaskListProps> = ({ title, columnId, boardId }) => {
         {title}
         <div className="flex items-center">
           <div className={"cursor-pointer mr-2"}>
-            <ButtonTransparent>
-              <Spinner loading={isFetching} />
-            </ButtonTransparent>
+            {isFetching && (
+              <ButtonTransparent>
+                <Spinner loading={isFetching} />
+              </ButtonTransparent>
+            )}
           </div>
           <div className={"cursor-pointer"}>
             <Dots />
