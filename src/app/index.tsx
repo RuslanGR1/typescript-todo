@@ -1,13 +1,16 @@
 import { Fragment, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { ToastContainer, toast } from "react-toastify";
 
 import Navigation from "widgets/Navigation";
 import { withProviders } from "./providers";
 import { Routing } from "pages";
-import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "shared/hooks/redux";
 import { logOut, selectCurrentToken } from "features/auth/authSlice";
-import { useSelector } from "react-redux";
 import { apiSlice } from "store/slices/apiSlice";
+
+import "react-toastify/dist/ReactToastify.css";
 
 const App = () => {
   const dispatch = useAppDispatch();
@@ -32,6 +35,7 @@ const App = () => {
   return (
     <Fragment>
       <Navigation isAuthenticated={isAuth} onLogout={onLogout} />
+      <ToastContainer />
       <Routing />
     </Fragment>
   );

@@ -1,7 +1,9 @@
 import { FC } from "react";
 import { useForm } from "react-hook-form";
-import { useAppDispatch } from "store/hooks";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+
+import { useAppDispatch } from "store/hooks";
 import { useLoginMutation } from "features/auth/authApiSlice";
 import { setCredentials } from "features/auth/authSlice";
 
@@ -24,11 +26,12 @@ const SignupPage: FC<Props> = () => {
       if (response.error) {
         if (response.error.status === 401) {
           reset();
-          alert(response.error.data.detail);
+          toast.error(response.error.data.detail);
         } else {
           console.log("Error", response);
         }
       } else {
+        toast.success("Авторизация прошла успешно");
         dispatch(setCredentials({ ...response }));
         navigate("/");
       }

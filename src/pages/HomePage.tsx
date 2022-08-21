@@ -37,8 +37,8 @@ const HomePage = () => {
       <Spinner /> <p>Loading...</p>
     </div>
   ) : (
-    <div className="px-2">
-      <h2 className="my-2 text-2xl flex space-x-2">
+    <div className="px-7">
+      <h2 className="my-4 text-2xl flex space-x-2">
         Все доски
         <ButtonTransparent
           onClick={(e) => setVisible(true)}
