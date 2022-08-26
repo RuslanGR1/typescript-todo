@@ -35,13 +35,13 @@ const baseQueryWithReauth = async (args: any, api: any, extraOptions: any) => {
       method: 'post',
       data: { refresh }
     })
-
+    
     if (refreshResult?.data) {
       // store the new token 
       api.dispatch(setCredentials({ data: refreshResult.data }))
       // retry the original query with new access token 
       result = await baseQuery(args, api, extraOptions)
-    } else {
+    } else {      
       api.dispatch(logOut())
       location.login()
     }

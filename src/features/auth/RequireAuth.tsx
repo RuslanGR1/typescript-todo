@@ -6,7 +6,7 @@ const RequireAuth = () => {
   const token = useSelector(selectCurrentToken);
   const location = useLocation();
   const refresh = localStorage.getItem("refresh");
-  return token || refresh ? (
+  return token && refresh ? (
     <Outlet />
   ) : (
     <Navigate to="auth/signin" state={{ from: location }} replace />
